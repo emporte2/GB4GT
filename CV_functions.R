@@ -1,5 +1,5 @@
 ###############################################################################
-# R function: this function Computes subject-specific gradients for a CV fold.
+# R function: this function computes subject-specific gradients for a CV fold.
 # Input: 
 # p = length N vector of probabilities
 # C = matrix identifying subjects assigned to the kth masterpool, format first column is number of individuals, then followed by indices of individuals 
@@ -43,6 +43,44 @@ grad.GT.train <- function(p,C,B,Y,Z,Se,Sp,k.train){
     }
   }
   return(dprob.Z)
+}
+
+###############################################################################
+# R function: this function computes the log-likelihood value for a CV fold.
+# Input: 
+# C = matrix identifying subjects assigned to the kth masterpool, format first column is number of individuals, then followed by indices of individuals 
+# B = matrix identifying the test results associated with kth masterpool, first column is number of results, followed by indices of test results 
+# N = total number of individuals
+# p = length N vector of probabilities
+# k.test = indices of subgroups (out of K) used for test/validation
+
+loglik <- function(C,B,N,p,k.test){
+  
+  prob.Z <- rep(NA,length(k.test))
+  for(k in k.test){
+    
+    ind <- C[k,2:(C[k,1]+1)]  #Pull individuals associated with kth group
+    ptemp <- p[ind]           #Pull probs for individuals associated with kth group
+    cj <- length(ind)         # number of individuals in group k
+    tmat <- expand.grid(replicate(cj, 0:1, simplify = FALSE))  # all 2^cj possible combinations of 0's and 1's 
+    prod.pi <- apply(t(t(tmat)*ptemp) + t(t(abs(1-tmat))*(1-ptemp)),1,prod)  # gets a probability for each combinations of 0's and 1's for th kth group
+    
+    SeSp <- 1
+    # Zd for test outcome, Zt for true outcome
+    for(t in 1:B[k,1]){
+      Zd <- Z[B[k,(t+1)],1]  # test outcomes for kth group
+      Yid <- Z[B[k,(t+1)],4:(Z[B[k,(t+1)],2]+3)]  # individuals contributing to test outcome
+      id <- match(Yid, ind)
+      Zt <- apply(as.matrix(tmat[,id]),1,sum)>0  # vector of all true statuses of Zd 
+      SeSp <- (Zt*Zd*Se + Zt*(1-Zd)*(1-Se) + (1-Zt)*Zd*(1-Sp) +(1-Zt)*(1-Zd)*Sp)*SeSp
+    }
+    
+    prob.Z[k] <- sum(SeSp*prod.pi)
+  }
+  
+  loglik <- sum(log(na.omit(prob.Z)))
+  
+  return(loglik=loglik)
 }
 
 ###############################################################################
