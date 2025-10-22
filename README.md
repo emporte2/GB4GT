@@ -1,6 +1,6 @@
 # GB4GT
 
-This repository contains R scripts for the manuscript "Gradient boosting for group testing data" by Erica M. Porter, Christopher S. McMahan, Joshua M. Tebbs, and Christopher R. Bilder.  
+This repository contains R scripts for the manuscript "Gradient boosting for group testing" by Erica M. Porter, Christopher S. McMahan, Joshua M. Tebbs, and Christopher R. Bilder.  
 
 1. <b>GB_functions.R</b> contains the necessary functions to simulate a group-testing data set and implement the proposed gradient boosting method in our manuscript.
 

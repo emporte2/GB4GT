@@ -1,4 +1,6 @@
 ###############################################################################
+######### Functions for performing gradient boosting on pooled data ###########
+
 # R function: this function computes subject-specific gradients for all observations
 # Input: 
 # p = length N vector of probabilities

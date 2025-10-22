@@ -1,5 +1,5 @@
 ###############################################################################
-# Read in necessary functions 
+# Read in necessary functions to run the example. 
 # Set R directory to your location that conatins the GB4GT R scripts.
 
 source("GB_functions.R")

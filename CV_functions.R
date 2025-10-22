@@ -8,7 +8,7 @@
 # Z = a matrix of testing responses
 # Se = sensitivity
 # Sp = specificity
-# k.train = indices of subgroups (out of K) used for training
+# k.train = indices of subgroups (out of K) used for training/CV
 
 grad.GT.train <- function(p,C,B,Y,Z,Se,Sp,k.train){
   
